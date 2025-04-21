@@ -1,3 +1,31 @@
-﻿  Event.cpp
-C:\backups\kuliah\Matkul\Semester 2\Praktikum Pemrograman Dasar 2\test\UTS\UTS\Event.cpp(285,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  UTS.vcxproj -> C:\backups\kuliah\Matkul\Semester 2\Praktikum Pemrograman Dasar 2\test\UTS\x64\Debug\UTS.exe
+﻿  App.cpp
+  Peserta.cpp
+  Registrasi.cpp
+  main.cpp
+C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Registrasi.cpp(42,30): error C2064: term does not evaluate to a function taking 0 arguments
+C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Registrasi.cpp(42,62): error C2039: 'getPesertaTerdaftar': is not a member of 'Event'
+      C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Event.h(6,7):
+      see declaration of 'Event'
+  
+C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Registrasi.cpp(43,37): error C2064: term does not evaluate to a function taking 0 arguments
+C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Registrasi.cpp(59,47): error C2039: 'email': is not a member of 'Peserta'
+      C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Peserta.h(5,7):
+      see declaration of 'Peserta'
+  
+C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Registrasi.cpp(67,12): error C2065: 'itEvent': undeclared identifier
+C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Registrasi.cpp(73,7): error C2065: 'itEvent': undeclared identifier
+C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Registrasi.cpp(73,39): error C2065: 'itEvent': undeclared identifier
+C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Registrasi.cpp(81,42): error C2039: 'getnama': is not a member of 'Peserta'
+      C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Peserta.h(5,7):
+      see declaration of 'Peserta'
+  
+C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Registrasi.cpp(82,41): error C2039: 'getinstitusi': is not a member of 'Peserta'
+      C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Peserta.h(5,7):
+      see declaration of 'Peserta'
+  
+C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Registrasi.cpp(83,37): error C2039: 'getemail': is not a member of 'Peserta'
+      C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\Peserta.h(5,7):
+      see declaration of 'Peserta'
+  
+C:\Users\Lenovo\Downloads\UTS_PPD_SEMSETER_2-main (2)\UTS_PPD_SEMSETER_2-main\UTS\UTS\main.cpp(20,9): warning C4101: 'select': unreferenced local variable
+  Generating Code...

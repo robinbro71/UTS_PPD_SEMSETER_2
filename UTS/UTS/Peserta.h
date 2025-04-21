@@ -6,5 +6,6 @@ class Peserta :
     public Event
 {   public:
     void tambahPeserta();
+
 };
 
