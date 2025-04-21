@@ -21,6 +21,10 @@ int main()
     Event event;
     Peserta peserta;
     App app;
+    Konferensi konferensi;
+    Workshop workshop;
+    Registrasi registrasi;
+    Seminar seminar;
     //Sertifikat sertifikat;
     loginPage:
     if (app.loginPage(event, peserta) == 0) {

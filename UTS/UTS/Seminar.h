@@ -4,6 +4,7 @@ using namespace std;
 
 class Seminar :
     public Event
-{
+{   public:
+    //void 
 };
 

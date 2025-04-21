@@ -100,6 +100,7 @@ void Event::adminPage() {
 void Event::tambahEvent() {
     system("cls");
     string tahunStr, bulanStr, tanggalStr, kapasitasStr;
+    string deskripsiEvent, deskripsiSeminar, deskripsiWorkshop, deskripsiKonferensi;
 
     cout << "=====================================\n";
     cout << "         FORM TAMBAH EVENT           \n";
@@ -127,7 +128,16 @@ void Event::tambahEvent() {
     getline(cin, kapasitasStr);
     kapasitas = stoi(kapasitasStr);
 
-    // Hitung nomor terakhir
+    cout << "Deskripsi Event         : ";
+    getline(cin, deskripsiEvent);
+    cout << "Deskripsi Seminar       : ";
+    getline(cin, deskripsiSeminar);
+    cout << "Deskripsi Workshop      : ";
+    getline(cin, deskripsiWorkshop);
+    cout << "Deskripsi Konferensi    : ";
+    getline(cin, deskripsiKonferensi);
+
+    // Hitung nomor event terakhir
     int nomor = 1;
     ifstream infile("event.txt");
     string line;
@@ -146,6 +156,10 @@ void Event::tambahEvent() {
         file << tempat << endl;
         file << tanggalEvent << " " << bulanEvent << " " << tahunEvent << endl;
         file << kapasitas << endl;
+        file << deskripsiEvent << endl;
+        file << deskripsiSeminar << endl;
+        file << deskripsiWorkshop << endl;
+        file << deskripsiKonferensi << endl;
         file.close();
         cout << "\nEvent berhasil disimpan!\n";
     }
@@ -155,6 +169,7 @@ void Event::tambahEvent() {
 
     system("pause");
 }
+
 
 
 void Event::lihatEvent() {
@@ -177,8 +192,9 @@ void Event::lihatEvent() {
             string nama;
             getline(file, nama);
             daftarNamaEvent.push_back(nama);
-            // skip 3 baris sisanya
-            for (int i = 0; i < 3; ++i) getline(file, line);
+
+            // Lewati 7 baris sisa
+            for (int i = 0; i < 7; ++i) getline(file, line);
         }
     }
 
@@ -212,27 +228,37 @@ void Event::lihatEvent() {
     file.seekg(posisiEvent[index - 1]);
 
     string nama, tempat, tanggal, kapasitasStr;
+    string deskripsiEvent, deskripsiSeminar, deskripsiWorkshop, deskripsiKonferensi;
+
     getline(file, nama);
     getline(file, tempat);
     getline(file, tanggal);
     getline(file, kapasitasStr);
+    getline(file, deskripsiEvent);
+    getline(file, deskripsiSeminar);
+    getline(file, deskripsiWorkshop);
+    getline(file, deskripsiKonferensi);
 
     cout << "\n========== DETAIL EVENT ==========\n";
-    cout << "Nama Event : " << nama << "\n";
-    cout << "Tempat     : " << tempat << "\n";
-    cout << "Tanggal    : " << tanggal << "\n";
-    cout << "Kapasitas  : " << kapasitasStr << "\n";
+    cout << "Nama Event           : " << nama << "\n";
+    cout << "Tempat               : " << tempat << "\n";
+    cout << "Tanggal              : " << tanggal << "\n";
+    cout << "Kapasitas            : " << kapasitasStr << "\n";
+    cout << "Deskripsi Event      : " << deskripsiEvent << "\n";
+    cout << "Deskripsi Seminar    : " << deskripsiSeminar << "\n";
+    cout << "Deskripsi Workshop   : " << deskripsiWorkshop << "\n";
+    cout << "Deskripsi Konferensi : " << deskripsiKonferensi << "\n";
     cout << "==================================\n";
+
     cout << "Apakah ingin mengedit event ini? (y/n): ";
     string konfirmasi;
     getline(cin, konfirmasi);
     if (konfirmasi == "y" || konfirmasi == "Y") {
-        editEvent(index); // index ke-n berdasarkan nomor event di file
+        editEvent(index); // Index berdasarkan nomor event
     }
 
     system("pause");
 }
-
 
 void Event::editEvent(int nomorEvent) {
     ifstream file("event.txt");
@@ -261,7 +287,8 @@ void Event::editEvent(int nomorEvent) {
         }
     }
 
-    if (targetIndex == -1 || targetIndex + 4 >= allEvents.size()) {
+    // Pastikan ada cukup baris untuk semua data (1 header + 8 data)
+    if (targetIndex == -1 || targetIndex + 8 >= allEvents.size()) {
         cout << "Event tidak ditemukan atau format file rusak.\n";
         system("pause");
         return;
@@ -269,22 +296,36 @@ void Event::editEvent(int nomorEvent) {
 
     // Ambil input baru dari admin
     string namaBaru, tempatBaru, tanggalBaru, kapasitasBaru;
+    string deskripsiEvent, deskripsiSeminar, deskripsiWorkshop, deskripsiKonferensi;
+
     system("cls");
     cout << "===== EDIT EVENT =====\n";
-    cout << "Nama Event Baru: ";
+    cout << "Nama Event Baru           : ";
     getline(cin, namaBaru);
-    cout << "Tempat Baru: ";
+    cout << "Tempat Baru               : ";
     getline(cin, tempatBaru);
-    cout << "Tanggal Baru (dd mm yyyy): ";
+    cout << "Tanggal Baru (dd mm yyyy) : ";
     getline(cin, tanggalBaru);
-    cout << "Kapasitas Baru: ";
+    cout << "Kapasitas Baru            : ";
     getline(cin, kapasitasBaru);
+    cout << "Deskripsi Event Baru      : ";
+    getline(cin, deskripsiEvent);
+    cout << "Deskripsi Seminar Baru    : ";
+    getline(cin, deskripsiSeminar);
+    cout << "Deskripsi Workshop Baru   : ";
+    getline(cin, deskripsiWorkshop);
+    cout << "Deskripsi Konferensi Baru : ";
+    getline(cin, deskripsiKonferensi);
 
-    // Ubah data pada posisi yang sesuai
+    // Update semua bagian di array
     allEvents[targetIndex + 1] = namaBaru;
     allEvents[targetIndex + 2] = tempatBaru;
     allEvents[targetIndex + 3] = tanggalBaru;
     allEvents[targetIndex + 4] = kapasitasBaru;
+    allEvents[targetIndex + 5] = deskripsiEvent;
+    allEvents[targetIndex + 6] = deskripsiSeminar;
+    allEvents[targetIndex + 7] = deskripsiWorkshop;
+    allEvents[targetIndex + 8] = deskripsiKonferensi;
 
     // Simpan kembali ke file
     ofstream outFile("event.txt", ios::trunc);
@@ -296,6 +337,7 @@ void Event::editEvent(int nomorEvent) {
     cout << "\nEvent berhasil diedit!\n";
     system("pause");
 }
+
 
 void Event::pesertaPage() {
 	system("cls");
