@@ -1,0 +1,12 @@
+﻿  App.cpp
+  Event.cpp
+  Konferensi.cpp
+  Peserta.cpp
+  Registrasi.cpp
+  Seminar.cpp
+  Sertifikat.cpp
+  Workshop.cpp
+  main.cpp
+C:\backups\kuliah\Matkul\Semester 2\Praktikum Pemrograman Dasar 2\test\UTS\UTS\main.cpp(20,9): warning C4101: 'select': unreferenced local variable
+  Generating Code...
+  UTS.vcxproj -> C:\backups\kuliah\Matkul\Semester 2\Praktikum Pemrograman Dasar 2\test\UTS\x64\Debug\UTS.exe
