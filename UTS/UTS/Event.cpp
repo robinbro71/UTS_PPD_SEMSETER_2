@@ -1,4 +1,4 @@
-#include "Event.h"
+﻿#include "Event.h"
 #include <fstream>
 #include <string>
 #include <vector>
@@ -21,7 +21,8 @@ int Event::login()
     cout << "=====================================\n";
 
     string line;
-    string nama, nameInput, institusi, email, password, passwordInput;
+    string nama, institusi, email, password;
+    string nameInput, passwordInput;
 
     cout << "Nama     : ";
     getline(cin, nameInput);
@@ -44,11 +45,13 @@ int Event::login()
     }
 
     while (getline(myFile, line)) {
-        if (line == "---") {
+        // Cek apakah ini baris penomoran peserta (misalnya: "1.", "2.", dst)
+        if (!line.empty() && isdigit(line[0]) && line.back() == '.') {
             getline(myFile, nama);
             getline(myFile, institusi);
             getline(myFile, email);
             getline(myFile, password);
+
             if (nameInput == nama && passwordInput == password) {
                 cout << "\nLogin sebagai Peserta berhasil!\n";
                 system("pause");
@@ -59,8 +62,9 @@ int Event::login()
 
     cout << "\nLogin gagal. Nama atau password salah.\n";
     system("pause");
-    return login(); // rekursif sampai login berhasil
+    return login(); // ulangi sampai login berhasil
 }
+
 
 
 void Event::adminPage() {
@@ -78,7 +82,7 @@ void Event::adminPage() {
         getline(cin, pilihan);
 
         if (pilihan == "1") {
-            tambahEvent();  // ?? Panggil fungsi yang telah dipisah
+            tambahEvent();  // 🔁 Panggil fungsi yang telah dipisah
         }
         else if (pilihan == "2") {
             lihatEvent();
@@ -292,9 +296,6 @@ void Event::editEvent(int nomorEvent) {
     cout << "\nEvent berhasil diedit!\n";
     system("pause");
 }
-
-
-
 
 void Event::pesertaPage() {
 	system("cls");

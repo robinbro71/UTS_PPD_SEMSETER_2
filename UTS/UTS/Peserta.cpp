@@ -22,9 +22,21 @@ void Peserta::tambahPeserta() {
     cout << "Password  : ";
     getline(cin, password);
 
-    fstream myFile("peserta.txt", ios::app); // Tambahkan ke akhir file
+    // Hitung jumlah peserta sebelumnya
+    int jumlahPeserta = 0;
+    ifstream inFile("peserta.txt");
+    string line;
+    while (getline(inFile, line)) {
+        if (line.find('.') != string::npos && isdigit(line[0])) {
+            jumlahPeserta++;
+        }
+    }
+    inFile.close();
+
+    // Tambahkan peserta baru dengan nomor urut
+    ofstream myFile("peserta.txt", ios::app);
     if (myFile.is_open()) {
-        myFile << "---" << endl;
+        myFile << (jumlahPeserta + 1) << "." << endl;
         myFile << nama << endl;
         myFile << institusi << endl;
         myFile << email << endl;
