@@ -17,7 +17,9 @@ public:
     void adminPage();
     void pesertaPage();
     int login();
+    void tambahEvent();
     void lihatEvent();
+    void editEvent(int indexToEdit);
     void invalid();
     //string deskripsi;
     //string pembicara;
