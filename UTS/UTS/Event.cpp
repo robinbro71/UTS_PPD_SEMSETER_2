@@ -1,19 +1,57 @@
 ﻿#include "Event.h"
+#include "Registrasi.h"
+#include "Sertifikat.h"
 #include <fstream>
 #include <string>
 #include <vector>
 
-void Event::cekKuota()
-{//menampilkna kapasitas suatu event
+int Event::userIndex = -1;
+
+int Event::cekKuota(int nomorEvent) {
+    ifstream file("event.txt");
+    if (!file.is_open()) {
+        cerr << "Gagal membuka file event.txt\n";
+        return -1;
+    }
+
+    string line;
+    vector<string> allEvents;
+    while (getline(file, line)) {
+        allEvents.push_back(line);
+    }
+    file.close();
+
+    // Format nomor event misalnya "2."
+    string targetHeader = to_string(nomorEvent) + ".";
+    int targetIndex = -1;
+
+    for (size_t i = 0; i < allEvents.size(); ++i) {
+        if (allEvents[i] == targetHeader) {
+            targetIndex = i;
+            break;
+        }
+    }
+
+    // Kapasitas ada di baris ke-5 setelah header: index + 4
+    if (targetIndex == -1 || targetIndex + 4 >= allEvents.size()) {
+        cerr << "Event tidak ditemukan atau data tidak lengkap.\n";
+        return -1;
+    }
+
+    int kapasitas;
+    try {
+        kapasitas = stoi(allEvents[targetIndex + 4]);
+    }
+    catch (...) {
+        cerr << "Format kapasitas tidak valid.\n";
+        return -1;
+    }
+
+    return kapasitas;
 }
 
-void Event::tampilkanInfo() 
-{//menampilakn info event berupa namaevent, tanggal, lokasi kapasitas
 
-}
-
-int Event::login()
-{
+int Event::login() {
     system("cls");
 
     cout << "=====================================\n";
@@ -44,6 +82,7 @@ int Event::login()
         return -1;
     }
 
+    int index = 0;
     while (getline(myFile, line)) {
         // Cek apakah ini baris penomoran peserta (misalnya: "1.", "2.", dst)
         if (!line.empty() && isdigit(line[0]) && line.back() == '.') {
@@ -53,10 +92,12 @@ int Event::login()
             getline(myFile, password);
 
             if (nameInput == nama && passwordInput == password) {
+                userIndex = index;
                 cout << "\nLogin sebagai Peserta berhasil!\n";
                 system("pause");
                 return 1;
             }
+            index++;
         }
     }
 
@@ -64,6 +105,7 @@ int Event::login()
     system("pause");
     return login(); // ulangi sampai login berhasil
 }
+
 
 
 
@@ -85,7 +127,7 @@ void Event::adminPage() {
             tambahEvent();  // 🔁 Panggil fungsi yang telah dipisah
         }
         else if (pilihan == "2") {
-            lihatEvent();
+            tampilkanInfo();
         }
         else if (pilihan == "0") {
             return; // Kembali ke login
@@ -172,7 +214,7 @@ void Event::tambahEvent() {
 
 
 
-void Event::lihatEvent() {
+void Event::tampilkanInfo() {
     system("cls");
     ifstream file("event.txt");
 
@@ -260,6 +302,87 @@ void Event::lihatEvent() {
     system("pause");
 }
 
+void Event::tampilkanInfoPeserta() {
+    system("cls");
+    ifstream file("event.txt");
+
+    if (!file.is_open()) {
+        cout << "Gagal membuka file event.txt\n";
+        system("pause");
+        return;
+    }
+
+    vector<string> daftarNamaEvent;
+    vector<streampos> posisiEvent;
+    string line;
+
+    while (getline(file, line)) {
+        if (!line.empty() && isdigit(line[0]) && line.back() == '.') {
+            posisiEvent.push_back(file.tellg()); // Simpan posisi setelah nomor
+            string nama;
+            getline(file, nama);
+            daftarNamaEvent.push_back(nama);
+
+            // Lewati 7 baris sisa
+            for (int i = 0; i < 7; ++i) getline(file, line);
+        }
+    }
+
+    if (daftarNamaEvent.empty()) {
+        cout << "Belum ada event yang ditambahkan.\n";
+        system("pause");
+        return;
+    }
+
+    // Tampilkan daftar nama event
+    cout << "========== DAFTAR EVENT ==========\n";
+    for (size_t i = 0; i < daftarNamaEvent.size(); ++i) {
+        cout << i + 1 << ". " << daftarNamaEvent[i] << "\n";
+    }
+    cout << "0. Kembali\n";
+    cout << "Pilih nomor event untuk melihat detail: ";
+
+    string pilihan;
+    getline(cin, pilihan);
+    int index = stoi(pilihan);
+
+    if (index == 0) return;
+    if (index < 1 || index > daftarNamaEvent.size()) {
+        cout << "Pilihan tidak valid.\n";
+        system("pause");
+        return;
+    }
+
+    // Buka ulang dan lompat ke posisi event yang dipilih
+    file.clear();
+    file.seekg(posisiEvent[index - 1]);
+
+    string nama, tempat, tanggal, kapasitasStr;
+    string deskripsiEvent, deskripsiSeminar, deskripsiWorkshop, deskripsiKonferensi;
+
+    getline(file, nama);
+    getline(file, tempat);
+    getline(file, tanggal);
+    getline(file, kapasitasStr);
+    getline(file, deskripsiEvent);
+    getline(file, deskripsiSeminar);
+    getline(file, deskripsiWorkshop);
+    getline(file, deskripsiKonferensi);
+
+    cout << "\n========== DETAIL EVENT ==========\n";
+    cout << "Nama Event           : " << nama << "\n";
+    cout << "Tempat               : " << tempat << "\n";
+    cout << "Tanggal              : " << tanggal << "\n";
+    cout << "Kapasitas            : " << kapasitasStr << "\n";
+    cout << "Deskripsi Event      : " << deskripsiEvent << "\n";
+    cout << "Deskripsi Seminar    : " << deskripsiSeminar << "\n";
+    cout << "Deskripsi Workshop   : " << deskripsiWorkshop << "\n";
+    cout << "Deskripsi Konferensi : " << deskripsiKonferensi << "\n";
+    cout << "==================================\n";
+    system("pause");
+    return;
+}
+
 void Event::editEvent(int nomorEvent) {
     ifstream file("event.txt");
     if (!file.is_open()) {
@@ -339,11 +462,71 @@ void Event::editEvent(int nomorEvent) {
 }
 
 
+#include <iostream>
+#include <string>
+using namespace std;
+
 void Event::pesertaPage() {
-	system("cls");
-	printf("you are in peserta page");
-	system("pause>0");
+    Registrasi reg;
+    Sertifikat ser;
+    // Ambil nama peserta berdasarkan pesertaIndex
+    string namaPeserta = "Pengguna";
+    fstream file("peserta.txt");
+    if (file.is_open()) {
+        string line;
+        int index = 0;
+        while (getline(file, line)) {
+            if (!line.empty() && isdigit(line[0]) && line.back() == '.') {
+                string nama, institusi, email, password;
+                getline(file, nama);
+                getline(file, institusi);
+                getline(file, email);
+                getline(file, password);
+
+                if (index == userIndex) {
+                    namaPeserta = nama;
+                    break;
+                }
+                index++;
+            }
+        }
+        file.close();
+    }
+
+    string pilihan;
+    do {
+        system("cls");
+        cout << "===== PESERTA PAGE =====" << endl;
+        cout << "Selamat datang, " << namaPeserta << "!" << endl << endl;
+        cout << "1. Lihat Event" << endl;
+        cout << "2. Registrasi" << endl;
+        cout << "3. Cetak Sertifikat" << endl;
+        cout << "0. Keluar" << endl;
+        cout << "Pilih opsi: ";
+        getline(cin, pilihan);
+
+        if (pilihan == "1") {
+            tampilkanInfoPeserta();
+        }
+        else if (pilihan == "2") {
+            reg.registrasiPage();
+        }
+        else if (pilihan == "3") {
+            ser.printSertifikat();
+        }
+        else if (pilihan == "0") {
+            cout << "Kembali ke menu utama..." << endl;
+            return;
+        }
+        else {
+            cout << "Pilihan tidak valid. Silakan coba lagi." << endl;
+            system("pause");
+        }
+    } while (pilihan != "0");
 }
+
+
+
 
 void Event::invalid() {
 	printf("name or password wrong, Please try again.\n");

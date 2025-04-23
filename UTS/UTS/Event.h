@@ -6,21 +6,24 @@ using namespace std;
 class Event
 {
 public:
+    static int userIndex;
     string namaEvent;
     string tempat;
     int tahunEvent;
     int bulanEvent;
     int tanggalEvent;
     int kapasitas;
-    void tampilkanInfo();
-    void cekKuota();
+    //void tampilkanInfo();
+    int cekKuota(int nomorIndex);
     void adminPage();
     void pesertaPage();
     int login();
     void tambahEvent();
-    void lihatEvent();
+    void tampilkanInfo();
+    void tampilkanInfoPeserta();
     void editEvent(int indexToEdit);
     void invalid();
+    //virtual void registrasiPage(); // <- tambahkan virtual agar bisa override
     //string deskripsi;
     //string pembicara;
     //string namaPenyelenggara;

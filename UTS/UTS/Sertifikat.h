@@ -13,10 +13,6 @@ private:
     string tanggalTerbit;
 
 public:
-    // Constructor
-    Sertifikat(const string& nomor, const string& penerima,
-        const string& namaEvent, const string& tanggalEvent,
-        const string& tglTerbit);
 
     // Method untuk mencetak sertifikat
     void printSertifikat();

@@ -1,84 +1,136 @@
 #include "Registrasi.h"
-#include "Peserta.h"
+#include <fstream>
+#include <string>
+#include <vector>
+
 #include <iostream>
-#include <algorithm>
-#include <sstream>
+#include <fstream>
+#include <string>
+#include <cctype>
+using namespace std;
 
-Registrasi::Registrasi() {
-    muatPesertaDariFile();
+void Registrasi::registrasi(int userIndex, string namaEvent) {
+    // Ambil nama peserta dari file peserta.txt berdasarkan index
+    ifstream filePeserta("peserta.txt");
+    if (!filePeserta.is_open()) {
+        cerr << "Gagal membuka file peserta.txt" << endl;
+        system("pause");
+        return;
+    }
 
-    Registrasi::~Registrasi() {
-        for (auto event : daftarEvent) {
-            delete event;
+    string line, nama, institusi, email, password;
+    int index = 0;
+    bool ditemukan = false;
+
+    while (getline(filePeserta, line)) {
+        if (!line.empty() && isdigit(line[0]) && line.back() == '.') {
+            getline(filePeserta, nama);
+            getline(filePeserta, institusi);
+            getline(filePeserta, email);
+            getline(filePeserta, password);
+
+            if (index == userIndex) {
+                ditemukan = true;
+                break;
+            }
+            index++;
         }
     }
 
-void Registrasi::muatPesertaDariFile() {
-    std::ifstream file("peserta.txt");
-    if (!file.is_open()) return;
+    filePeserta.close();
 
-    std::string line;
-    while (std::getline(file, line)) {
-        std::istringstream iss(line);
-        std::string nama, institusi, email;
+    if (!ditemukan) {
+        cout << "User dengan index " << userIndex << " tidak ditemukan!" << endl;
+        system("pause");
+        return;
+    }
 
-        if (std::getline(iss, nama, ';') &&
-            std::getline(iss, institusi, ';') &&
-            std::getline(iss, email)) {
-            daftarPeserta.emplace_back(nama, institusi, email);
+    // Hitung jumlah registrasi yang sudah ada
+    ifstream fileHitung("registrasi.txt");
+    int count = 0;
+    while (getline(fileHitung, line)) {
+        if (!line.empty() && isdigit(line[0]) && line.back() == '.') {
+            count++;
         }
     }
+    fileHitung.close();
+
+    int nomorBaru = count + 1;
+
+    // Tambahkan data baru ke file registrasi.txt
+    ofstream fileReg("registrasi.txt", ios::app);
+    if (!fileReg.is_open()) {
+        cerr << "Gagal membuka file registrasi.txt" << endl;
+        system("pause");
+        return;
+    }
+
+    fileReg << nomorBaru << "." << endl;
+    fileReg << nama << endl;
+    fileReg << userIndex << endl;
+    fileReg << namaEvent << endl;
+
+    fileReg.close();
+
+    cout << "\nRegistrasi berhasil untuk event: " << namaEvent << endl;
+    system("pause");
+}
+
+
+void Registrasi::registrasiPage() {
+    ifstream file("event.txt");
+    if (!file.is_open()) {
+        cout << "Gagal membuka file event.txt" << endl;
+        system("pause");
+        return;
+    }
+
+    const int MAX_EVENT = 100;
+    string judulEvent[MAX_EVENT]; // array untuk menyimpan judul
+    int totalEvent = 0;
+    string line;
+
+    // Baca file dan ambil judul event
+    while (getline(file, line)) {
+        if (!line.empty() && isdigit(line[0]) && line.back() == '.') {
+            string judul;
+            getline(file, judul); // baris judul
+            judulEvent[totalEvent] = judul;
+            totalEvent++;
+
+            // Lewati 7 baris sisanya
+            for (int i = 0; i < 7; ++i) getline(file, line);
+
+            // Cegah overflow array
+            if (totalEvent >= MAX_EVENT) break;
+        }
+    }
+
     file.close();
-}
 
-void Registrasi::tampilkanDaftarEvent() const {
-    std::cout << "\n=== DAFTAR EVENT TERSEDIA ===\n";
-    for (size_t i = 0; i < daftarEvent.size(); ++i) {
-        std::cout << "[" << i + 1 << "] ";
-        daftarEvent[i]->tampilkanInfo();
-        std::cout << "Kuota tersedia: "
-            << daftarEvent[i]->kapasitas() - daftarEvent[i]
-            << "/" << daftarEvent[i]->kapasitas() << "\n";
-        std::cout << "---------------------------\n";
-    }
-}
-
-Event* Registrasi::dapatkanEventByIndex(int index) const {
-    if (index < 0 || index >= static_cast<int>(daftarEvent.size())) {
-        return nullptr;
-    }
-    return daftarEvent[index];
-}
-
-// Fungsi untuk mendaftar ke event tertentu
-bool Registrasi::daftarKeEvent(const std::string& email, const std::string& namaEvent) {
-    // Cari peserta
-    auto itPeserta = std::find_if(daftarPeserta.begin(), daftarPeserta.end(),
-        [&email](const Peserta& p) { return p.email() == email; });
-
-    if (itPeserta == daftarPeserta.end()) {
-        std::cout << "Email tidak terdaftar.\n";
-        return false;
+    // Tampilkan daftar judul event
+    system("cls");
+    cout << "===== DAFTAR EVENT =====" << endl;
+    for (int i = 0; i < totalEvent; ++i) {
+        cout << (i + 1) << ". " << judulEvent[i] << endl;
     }
 
-    // Cek kuota
-    if (!(itEvent)->cekKuota()) {
-        std::cout << "Kuota event sudah penuh.\n";
-        return false;
+    // Minta input pilihan user
+    cout << "\nPilih nomor event untuk registrasi: ";
+    string input;
+    getline(cin, input);
+    int pilihan = stoi(input);
+
+    if (pilihan > 0 && pilihan <= totalEvent) {
+        string namaEvent = judulEvent[pilihan - 1];
+        cout << "Anda memilih: " << namaEvent << endl;
+        system("pause");
+
+        // Jalankan fungsi registrasi dengan userIndex dan nama event
+        registrasi(Event::userIndex, namaEvent);
     }
-
-    // Tambah peserta ke event
-    (*itEvent)->setPesertaTerdaftar((*itEvent)->getPesertaTerdaftar() + 1);
-    std::cout << "Pendaftaran berhasil untuk event: " << namaEvent << "\n";
-    return true;
-}
-
-void Registrasi::tampilkanDaftarPeserta() const {
-    std::cout << "\n=== DAFTAR PESERTA TERDAFTAR ===\n";
-    for (const auto& peserta : daftarPeserta) {
-        std::cout << "Nama: " << peserta.nama() << "\n"
-            << "Institusi: " << peserta.institusi() << "\n"
-            << "Email: " << peserta.email() << "\n"
-            << "-----------------------------\n";
+    else {
+        cout << "Pilihan tidak valid." << endl;
+        system("pause");
     }
 }

@@ -25,7 +25,6 @@ int main()
     Workshop workshop;
     Registrasi registrasi;
     Seminar seminar;
-    //Sertifikat sertifikat;
     loginPage:
     if (app.loginPage(event, peserta) == 0) {
             event.adminPage();
@@ -47,3 +46,30 @@ int main()
 //   4. Use the Error List window to view errors
 //   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
 //   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+
+
+//+---------------------------- - +
+//| Event | ? kelas dasar(base class)
+//+ ---------------------------- - +
+//| -namaEvent : string       |
+//| -tempat : string          |
+//| -tahunEvent : int         |
+//| -bulanEvent : int         |
+//| -tanggalEvent : int       |
+//| -kapasitas : int |
+//+---------------------------- - +
+//| +infoEvent() : virtual    |
+//| +updateEvent() : virtual |
+//+---------------------------- - +
+//?
+//???????????????????????????????????????????????????????????????????????????????
+//?          ?            ?            ?             ?             ?            ?
+//+ ------ + +------------ - ++------------ + +---------- - ++---------- - ++---------- - ++------------ +
+//| App |   | Konferensi  | |  Peserta   | | Registrasi| |  Seminar  | | Sertifikat | | Workshop |
+//+------ + +------------ - ++------------ + +---------- - ++---------- - ++---------- - ++------------ +
+//?
+
+
+
+//
+//? kelas turunan dari Event
